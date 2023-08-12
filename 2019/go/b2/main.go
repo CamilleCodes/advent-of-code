@@ -65,13 +65,16 @@ func main() {
 	}
 
 	for index, opcode := range puzz.input {
-		if index%opLength == 0 {
-			if opcode == endProgram {
-				break
-			}
-
-			puzz.processOpcode(opcode, index)
+		if index%opLength != 0 {
+			continue
 		}
+
+		if opcode == endProgram {
+			break
+		}
+
+		puzz.processOpcode(opcode, index)
+
 	}
 
 	fmt.Println(puzz.output)
