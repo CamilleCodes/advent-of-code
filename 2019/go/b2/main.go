@@ -16,7 +16,8 @@ func multiply(a, b int) int {
 }
 
 type puzzle struct {
-	input []int
+	input  []int
+	output int
 }
 
 // Pull input values needed for the add or multiply operation
@@ -31,18 +32,17 @@ func (p *puzzle) pullInputValues(index int) (int, int) {
 func (p *puzzle) setOpResult(index, result int) {
 	resultIndex := p.input[index+3]
 	p.input[resultIndex] = result
+	p.output = p.input[0]
 }
 
 // Process the opcode (1, 2, or 99) and return the current value
 // at position 0 of the puzzle input
-func (p *puzzle) processOpcode(opcode, index int) int {
+func (p *puzzle) processOpcode(opcode, index int) {
 	a, b := p.pullInputValues(index)
 
 	// Perform operation (add or multiply)
 	result := _op[opcode](a, b)
 	p.setOpResult(index, result)
-
-	return p.input[0]
 }
 
 func main() {
@@ -64,16 +64,15 @@ func main() {
 		},
 	}
 
-	var result int
 	for index, opcode := range puzz.input {
 		if index%opLength == 0 {
 			if opcode == endProgram {
 				break
 			}
 
-			result = puzz.processOpcode(opcode, index)
+			puzz.processOpcode(opcode, index)
 		}
 	}
 
-	fmt.Println(result)
+	fmt.Println(puzz.output)
 }
