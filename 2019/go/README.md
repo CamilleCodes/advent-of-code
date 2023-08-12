@@ -8,7 +8,7 @@ In progress - implemented on a Linux machine running PopOS / Ubuntu 22.04.
 
 ## Run locally
 
-```bash
+```fish
 # run the commands separately
 set DAY a1
 go run $DAY/main.go
