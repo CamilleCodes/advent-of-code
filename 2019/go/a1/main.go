@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// Part 1
+// Part 1 & 2
 
 // getFile opens the input file and returns a pointer to the file
 func getFile(path string) *os.File {
@@ -39,17 +39,36 @@ func getFuelRequired(mass int) int {
 	return mass/3 - 2
 }
 
+// getAdditionalFuelRequired calculates the total amount of fuel
+// required for the fuel itself
+func getAdditionalFuelRequired(fuel int) int {
+	additionalFuel := 0
+	for {
+		fuel = getFuelRequired(fuel)
+		if fuel <= 0 {
+			break
+		}
+
+		additionalFuel += fuel
+	}
+
+	return additionalFuel
+}
+
 func main() {
 	file := getFile("a1/input.txt")
 	defer file.Close()
 
-	var fuelTotal = 0
+	fuelTotal := 0
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		mass := getModuleMass(scanner.Text())
 		fuel := getFuelRequired(mass)
 		fuelTotal += fuel
+
+		additionalFuel := getAdditionalFuelRequired(fuel)
+		fuelTotal += additionalFuel
 	}
 
 	fmt.Println(fuelTotal)
