@@ -21,8 +21,7 @@ func getFile(path string) *os.File {
 	return file
 }
 
-// getModuleMass scans the input file and returns the mass of the
-// module mass listed in the input file
+// getModuleMass returns the module mass listed in the input text
 func getModuleMass(input string) int {
 	mass, err := strconv.Atoi(input)
 	if err != nil {
