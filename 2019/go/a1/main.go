@@ -4,22 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
+
+	"camille.codes/aoc/utils"
 )
 
 // Part 1 & 2
-
-// getFile opens the input file and returns a pointer to the file
-func getFile(path string) *os.File {
-	file, err := os.Open(path)
-	if err != nil {
-		fmt.Println("Error opening file")
-		log.Fatal(err)
-	}
-
-	return file
-}
 
 // getModuleMass returns the module mass listed in the input text
 func getModuleMass(input string) int {
@@ -55,7 +45,7 @@ func getAdditionalFuelRequired(fuel int) int {
 }
 
 func main() {
-	file := getFile("a1/input.txt")
+	file := utils.GetFile("a1/input.txt")
 	defer file.Close()
 
 	fuelTotal := 0
