@@ -1,36 +1,50 @@
 package coord
 
 import (
-	"fmt"
-
 	"camille.codes/aoc/utils"
 )
 
 type Point struct {
-	X int64
-	Y int64
+	X int
+	Y int
 }
 
-type Path []Point
-
-func Something() {
-	pointA := Point{X: 0, Y: 0}
-	pointB := Point{X: 0, Y: 0}
-
-	test := map[Point]int64{
-		pointA: 1,
-	}
-
-	_, ok := test[pointB]
-	if ok {
-		fmt.Println("hello, I am in the map")
+func (point *Point) addDisplacement(direction byte) {
+	switch direction {
+	case 'U':
+		point.Y++
+	case 'D':
+		point.Y--
+	case 'L':
+		point.X--
+	case 'R':
+		point.X++
+	default:
+		panic("invalid direction")
 	}
 }
 
-func (path Path) GetIntersectionDistances(wirePath Path) []int64 {
-	distances := make([]int64, 0)
+// TODO: Make this a map of points to the number of steps for part 2
+type Path map[Point]int
 
-	for _, point := range wirePath {
+func (path Path) AddPoints(
+	direction byte,
+	displacement int,
+	point Point,
+) Point {
+	for i := 0; i < displacement; i++ {
+		point.addDisplacement(direction)
+		// TODO: Add steps for part 2
+		path[point] = 0
+	}
+
+	return point
+}
+
+func (path Path) GetIntersectionDistances(wirePath Path) []int {
+	distances := make([]int, 0)
+
+	for point := range wirePath {
 		if path.contains(point) {
 			distance := utils.Abs(point.X) + utils.Abs(point.Y)
 			distances = append(distances, distance)
@@ -41,11 +55,6 @@ func (path Path) GetIntersectionDistances(wirePath Path) []int64 {
 }
 
 func (path Path) contains(point Point) bool {
-	for _, location := range path {
-		if point == location {
-			return true
-		}
-	}
-
-	return false
+	_, ok := path[point]
+	return ok
 }

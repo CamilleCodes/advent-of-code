@@ -18,7 +18,7 @@ func GetFile(path string) *os.File {
 }
 
 // Abs returns the absolute value of an integer
-func Abs(x int64) int64 {
+func Abs(x int) int {
 	if x < 0 {
 		return -x
 	}
