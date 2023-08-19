@@ -3,49 +3,15 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
-	"sort"
-	"strconv"
 	"strings"
 
 	"camille.codes/aoc/c3/coord"
 	"camille.codes/aoc/utils"
 )
 
-func getPath(scanner *bufio.Scanner) coord.Path {
+func getWire(scanner *bufio.Scanner) []string {
 	scanner.Scan()
-
-	directions := strings.Split(scanner.Text(), ",")
-
-	path := createPath(directions)
-
-	return path
-}
-
-func createPath(directions []string) coord.Path {
-	path := coord.Path{}
-	startPoint := coord.Point{X: 0, Y: 0}
-
-	for _, location := range directions {
-		direction := location[0]
-		displacement, err := strconv.Atoi(location[1:])
-		if err != nil {
-			fmt.Println("error converting string to int")
-			log.Fatal(err)
-		}
-
-		startPoint = path.AddPoints(direction, displacement, startPoint)
-	}
-
-	return path
-}
-
-func getLowestDistance(distances []int) int {
-	sort.SliceStable(distances, func(i, j int) bool {
-		return distances[i] < distances[j]
-	})
-
-	return distances[0]
+	return strings.Split(scanner.Text(), ",")
 }
 
 func main() {
@@ -54,9 +20,14 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 
-	pathA := getPath(scanner)
-	pathB := getPath(scanner)
+	coaxial := getWire(scanner)
+	fiberOptic := getWire(scanner)
+	coaxialPath := coord.CreatePath(coaxial)
+	fiberOpticPath := coord.CreatePath(fiberOptic)
 
-	distances := pathA.GetIntersectionDistances(pathB)
-	fmt.Println(getLowestDistance(distances))
+	distances := coaxialPath.GetIntersectionDistances(fiberOpticPath)
+	steps := coaxialPath.GetIntersectionSteps(fiberOpticPath)
+
+	fmt.Println(utils.Min(distances))
+	fmt.Println(utils.Min(steps))
 }

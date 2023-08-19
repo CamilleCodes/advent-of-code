@@ -10,7 +10,7 @@ import (
 func GetFile(path string) *os.File {
 	file, err := os.Open(path)
 	if err != nil {
-		fmt.Println("Error opening file")
+		fmt.Println("error opening file")
 		log.Fatal(err)
 	}
 
@@ -24,4 +24,16 @@ func Abs(x int) int {
 	}
 
 	return x
+}
+
+// Min returns the lowest value in a slice of integers
+func Min(nums []int) int {
+	lowest := nums[0]
+	for _, num := range nums {
+		if num < lowest {
+			lowest = num
+		}
+	}
+
+	return lowest
 }
