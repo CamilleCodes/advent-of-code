@@ -2,109 +2,59 @@ package pc
 
 import (
 	"fmt"
-	"log"
+
+	"camille.codes/aoc/utils"
 )
 
 type Computer struct {
 	memory []int
-	Output int
 }
 
 // InitializeMemory sets the values for the computer program memory
 func (c *Computer) InitializeMemory(input []int) {
-	c.memory = input
+	c.memory = utils.Copy(input)
 }
 
 // ProcessInstructions runs the computer program
-func (c *Computer) ProcessInstructions(input, endProgram int) {
-	parameterLength := 0
-	for address, instruction := range c.memory {
-		if parameterLength > 0 {
-			parameterLength--
-			continue
-		}
-
-		if instruction == endProgram {
-			fmt.Println("halt program")
-			break
-		}
-
-		slice := convertToSlice(instruction)
-		opCode := pullOpCode(slice)
-		modes := pullParameterModes(slice)
-
-		switch opCode {
-		case 1:
-			p1, p2, p3 := c.getParameters(modes, address)
-
-			result := add(p1, p2)
-			c.memory[p3] = result
-
-			parameterLength = 3
-		case 2:
-			p1, p2, p3 := c.getParameters(modes, address)
-
-			result := multiply(p1, p2)
-			c.memory[p3] = result
-
-			parameterLength = 3
-
-		case 3:
-			// Takes a single integer as input and saves it
-			// to the position given by its only parameter
-			c.memory[c.memory[address+1]] = input
-
-			parameterLength = 1
-
-		case 4:
-			// Outputs the value of it's only parameter
-			var output int
-			if modes[len(modes)-1] == 1 {
-				output = c.memory[address+1]
-			} else {
-				output = c.memory[c.memory[address+1]]
-			}
-
-			c.Output = output
-
-			fmt.Println("output:", c.Output)
-
-			parameterLength = 1
-
-		default:
-			log.Fatal("invalid opcode")
-		}
+func (c *Computer) ProcessInstructions(input int) {
+	for instructionPtr := 0; instructionPtr < len(c.memory); {
+		instructionPtr = c.processOpCode(instructionPtr, input)
 	}
 }
 
-func (c *Computer) getParameters(modes []int, address int) (int, int, int) {
-	var p1, p2 int
-	var p3 = c.memory[address+3]
+// Process the opcode and advance to the next instruction
+func (c *Computer) processOpCode(ptr, input int) int {
+	opCodeLength, instruction := 2, c.memory[ptr]
+	opCode, modes := pullOpCodeAndModes(instruction, opCodeLength)
 
-	if modes[len(modes)-1] == 1 {
-		p1 = c.memory[address+1]
-	} else {
-		p1 = c.memory[c.memory[address+1]]
+	switch opCode {
+	case 1:
+		return c.add(modes, ptr)
+	case 2:
+		return c.multiply(modes, ptr)
+	case 3:
+		return c.input(ptr, input)
+	case 4:
+		return c.output(modes, ptr)
+	case 5:
+		return c.jumpIfTrue(modes, ptr)
+	case 6:
+		return c.jumpIfFalse(modes, ptr)
+	case 7:
+		return c.lessThan(modes, ptr)
+	case 8:
+		return c.equals(modes, ptr)
+	case 99:
+		// halt
+		return len(c.memory)
+	default:
+		fmt.Println("invalid opcode:", opCode)
+		return len(c.memory)
 	}
-
-	if modes[len(modes)-2] == 1 {
-		p2 = c.memory[address+2]
-	} else {
-		p2 = c.memory[c.memory[address+2]]
-	}
-
-	return p1, p2, p3
 }
 
-func add(a, b int) int {
-	return a + b
-}
-
-func multiply(a, b int) int {
-	return a * b
-}
-
-func convertToSlice(num int) []int {
+// Convert an integer to a slice of integers
+func convertIntToSlice(num int) []int {
 	slice := make([]int, 4)
 
 	for i := 3; num > 0; i-- {
@@ -115,6 +65,7 @@ func convertToSlice(num int) []int {
 	return slice
 }
 
+// Convert a slice of integers to an integer
 func convertToNumber(slice []int) int {
 	var num int
 
@@ -125,11 +76,20 @@ func convertToNumber(slice []int) int {
 	return num
 }
 
-func pullOpCode(slice []int) int {
-	code := slice[len(slice)-2:]
-	return convertToNumber(code)
+// Pull the opcode from the instructions
+func pullOpCode(instructions []int, opCodeLength int) int {
+	opCode := instructions[len(instructions)-opCodeLength:]
+	return convertToNumber(opCode)
 }
 
-func pullParameterModes(slice []int) []int {
-	return slice[:len(slice)-2]
+// Pull the parameter modes from the instructions
+func pullParameterModes(instructions []int, opCodeLength int) []int {
+	return instructions[:len(instructions)-opCodeLength]
+}
+
+// Pull the opcode and the parameter modes from the instructions
+func pullOpCodeAndModes(instruction, opCodeLength int) (int, []int) {
+	fullInstructions := convertIntToSlice(instruction)
+	return pullOpCode(fullInstructions, opCodeLength),
+		pullParameterModes(fullInstructions, opCodeLength)
 }

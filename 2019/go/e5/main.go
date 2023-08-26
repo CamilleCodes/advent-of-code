@@ -36,12 +36,15 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	diagnosticProgram := getProgram(scanner)
 
-	c := &pc.Computer{}
-	c.InitializeMemory(diagnosticProgram)
+	computer := &pc.Computer{}
 
-	const inputInstruction = 1
-	const endProgram = 99
-	c.ProcessInstructions(inputInstruction, endProgram)
+	fmt.Println("Part 1")
+	inputInstruction := 1
+	computer.InitializeMemory(diagnosticProgram)
+	computer.ProcessInstructions(inputInstruction)
 
-	fmt.Println("diagnostic code:", c.Output)
+	fmt.Println("Part 2")
+	inputInstruction = 5
+	computer.InitializeMemory(diagnosticProgram)
+	computer.ProcessInstructions(inputInstruction)
 }
