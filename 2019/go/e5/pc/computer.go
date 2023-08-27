@@ -1,7 +1,11 @@
 package pc
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"strconv"
+	"strings"
 
 	"camille.codes/aoc/utils"
 )
@@ -11,8 +15,26 @@ type Computer struct {
 	inputInstruction int
 }
 
-// InitializeMemory sets the values for the computer program memory
-func (c *Computer) InitializeMemory(input []int, inputInstruction int) {
+// [ ] TODO: file drive with different modes of reading the data (floppy drive, disk drive, etc.)
+// load function for each
+// bring back diagnostic program
+
+// LoadProgram loads the program into memory and sets the input instruction
+func (c *Computer) LoadProgram(scanner *bufio.Scanner, inputInstruction int) {
+	scanner.Scan()
+	stringInput := strings.Split(scanner.Text(), ",")
+
+	var input []int
+	for _, v := range stringInput {
+		val, err := strconv.Atoi(v)
+		if err != nil {
+			log.Println("error converting string to int")
+			log.Fatal(err)
+		}
+
+		input = append(input, val)
+	}
+
 	c.memory = utils.Copy(input)
 	c.inputInstruction = inputInstruction
 }
