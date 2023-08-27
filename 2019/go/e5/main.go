@@ -40,11 +40,11 @@ func main() {
 
 	fmt.Println("Part 1")
 	inputInstruction := 1
-	computer.InitializeMemory(diagnosticProgram)
-	computer.ProcessInstructions(inputInstruction)
+	computer.InitializeMemory(diagnosticProgram, inputInstruction)
+	computer.ProcessInstructions()
 
 	fmt.Println("Part 2")
 	inputInstruction = 5
-	computer.InitializeMemory(diagnosticProgram)
-	computer.ProcessInstructions(inputInstruction)
+	computer.InitializeMemory(diagnosticProgram, inputInstruction)
+	computer.ProcessInstructions()
 }

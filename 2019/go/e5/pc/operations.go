@@ -45,10 +45,10 @@ func (c *Computer) multiply(modes []int, ptr int) int {
 
 // Input takes a single integer as input and saves it
 // to the position given by its only parameter
-func (c *Computer) input(ptr int, input int) int {
+func (c *Computer) input(ptr int) int {
 	parameterAddress := ptr + 1
 	savePosition := c.memory[parameterAddress]
-	c.memory[savePosition] = input
+	c.memory[savePosition] = c.inputInstruction
 
 	ptr += 2
 	return ptr

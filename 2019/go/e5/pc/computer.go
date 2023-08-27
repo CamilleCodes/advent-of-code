@@ -7,23 +7,25 @@ import (
 )
 
 type Computer struct {
-	memory []int
+	memory           []int
+	inputInstruction int
 }
 
 // InitializeMemory sets the values for the computer program memory
-func (c *Computer) InitializeMemory(input []int) {
+func (c *Computer) InitializeMemory(input []int, inputInstruction int) {
 	c.memory = utils.Copy(input)
+	c.inputInstruction = inputInstruction
 }
 
 // ProcessInstructions runs the computer program
-func (c *Computer) ProcessInstructions(input int) {
+func (c *Computer) ProcessInstructions() {
 	for instructionPtr := 0; instructionPtr < len(c.memory); {
-		instructionPtr = c.processOpCode(instructionPtr, input)
+		instructionPtr = c.processOpCode(instructionPtr)
 	}
 }
 
 // Process the opcode and advance to the next instruction
-func (c *Computer) processOpCode(ptr, input int) int {
+func (c *Computer) processOpCode(ptr int) int {
 	opCodeLength, instruction := 2, c.memory[ptr]
 	opCode, modes := pullOpCodeAndModes(instruction, opCodeLength)
 
@@ -33,7 +35,7 @@ func (c *Computer) processOpCode(ptr, input int) int {
 	case 2:
 		return c.multiply(modes, ptr)
 	case 3:
-		return c.input(ptr, input)
+		return c.input(ptr)
 	case 4:
 		return c.output(modes, ptr)
 	case 5:
