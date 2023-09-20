@@ -1,9 +1,12 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 )
 
 // GetFile opens the input file and returns a pointer to the file
@@ -15,6 +18,25 @@ func GetFile(path string) *os.File {
 	}
 
 	return file
+}
+
+// GetProgram reads the input file and returns a slice of integers
+func GetProgram(scanner *bufio.Scanner) []int {
+	scanner.Scan()
+	stringInput := strings.Split(scanner.Text(), ",")
+
+	var program []int
+	for _, v := range stringInput {
+		val, err := strconv.Atoi(v)
+		if err != nil {
+			log.Println("error converting string to int")
+			log.Fatal(err)
+		}
+
+		program = append(program, val)
+	}
+
+	return program
 }
 
 // Abs returns the absolute value of an integer
@@ -43,4 +65,24 @@ func Copy(nums []int) []int {
 	var copy []int
 	copy = append(copy, nums...)
 	return copy
+}
+
+// GetPermutations returns all permutations of a slice of integers
+func GetPermutations(nums []int) [][]int {
+	var permutations [][]int
+
+	for i, num := range nums {
+		permutation := Copy(nums)
+		permutation = append(permutation[:i], permutation[i+1:]...)
+
+		if len(permutation) == 0 {
+			permutations = append(permutations, []int{num})
+		} else {
+			for _, permu := range GetPermutations(permutation) {
+				permutations = append(permutations, append([]int{num}, permu...))
+			}
+		}
+	}
+
+	return permutations
 }
