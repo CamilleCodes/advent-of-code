@@ -6,6 +6,8 @@ import (
 
 	"camille.codes/aoc/g7/pc"
 	"camille.codes/aoc/utils"
+
+	"github.com/Ramshackle-Jamathon/go-quickPerm"
 )
 
 func main() {
@@ -16,11 +18,11 @@ func main() {
 	amplifierController := utils.GetProgram(scanner)
 
 	phaseSettings := []int{0, 1, 2, 3, 4}
-	permutations := utils.GetPermutations(phaseSettings)
-	fmt.Println("permutations:", permutations)
-
 	finalOutputSignal := 0
-	for _, permutation := range permutations {
+
+	// Permutations reference:
+	// https://www.baeldung.com/cs/array-generate-all-permutations#quickperm-algorithm
+	for permutation := range quickPerm.GeneratePermutationsInt(phaseSettings) {
 		amplifierA := &pc.Computer{}
 		amplifierB := &pc.Computer{}
 		amplifierC := &pc.Computer{}

@@ -66,23 +66,3 @@ func Copy(nums []int) []int {
 	copy = append(copy, nums...)
 	return copy
 }
-
-// GetPermutations returns all permutations of a slice of integers
-func GetPermutations(nums []int) [][]int {
-	var permutations [][]int
-
-	for i, num := range nums {
-		permutation := Copy(nums)
-		permutation = append(permutation[:i], permutation[i+1:]...)
-
-		if len(permutation) == 0 {
-			permutations = append(permutations, []int{num})
-		} else {
-			for _, permu := range GetPermutations(permutation) {
-				permutations = append(permutations, append([]int{num}, permu...))
-			}
-		}
-	}
-
-	return permutations
-}
