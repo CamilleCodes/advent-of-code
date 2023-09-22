@@ -11,6 +11,11 @@ import (
 )
 
 func main() {
+	fmt.Println("part 1:", runAmplifiers())
+	fmt.Println("part 2:", loopAmplifiers())
+}
+
+func runAmplifiers() int {
 	file := utils.GetFile("g7/input.txt")
 	defer file.Close()
 
@@ -55,5 +60,9 @@ func main() {
 		}
 	}
 
-	fmt.Println("part 1:", finalOutputSignal)
+	return finalOutputSignal
+}
+
+func loopAmplifiers() int {
+	return 0
 }
