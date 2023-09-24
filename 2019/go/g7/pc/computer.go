@@ -18,19 +18,7 @@ type Computer struct {
 	inputCounter   int
 }
 
-func (c *Computer) LoadSoftware(software []int, phaseSetting int) {
-	c.IsRunning = true
-	c.memory = utils.Copy(software)
-	c.phaseSetting = phaseSetting
-	c.inputCounter = 0
-	c.instructionPtr = 0
-}
-
-func (c *Computer) SetInputSignal(inputSignal int) {
-	c.inputSignal = inputSignal
-}
-
-// InitializeMemory sets the values for the computer program memory
+// InitializeMemory sets the values for the computer program memory (for part 1)
 func (c *Computer) InitializeMemory(software []int, phaseSetting, inputSignal int) {
 	c.memory = utils.Copy(software)
 	c.phaseSetting = phaseSetting
@@ -39,7 +27,7 @@ func (c *Computer) InitializeMemory(software []int, phaseSetting, inputSignal in
 	c.instructionPtr = 0
 }
 
-// ProcessInstructions runs the computer program
+// ProcessInstructions runs the computer program (for part 1)
 func (c *Computer) ProcessInstructions() {
 	c.IsRunning = true
 	for c.IsRunning && c.instructionPtr < len(c.memory) {
@@ -47,6 +35,21 @@ func (c *Computer) ProcessInstructions() {
 	}
 }
 
+// LoadSoftware sets the values for the computer program memory (for part 2)
+func (c *Computer) LoadSoftware(software []int, phaseSetting int) {
+	c.IsRunning = true
+	c.memory = utils.Copy(software)
+	c.phaseSetting = phaseSetting
+	c.inputCounter = 0
+	c.instructionPtr = 0
+}
+
+// SetInputSignal sets the input signal for the computer (for part 2)
+func (c *Computer) SetInputSignal(inputSignal int) {
+	c.inputSignal = inputSignal
+}
+
+// ProcessUntilSuspended runs the computer program until it is suspended or halted (for part 2)
 func (c *Computer) ProcessUntilSuspended() {
 	c.IsSuspended = false
 	for c.IsRunning && !c.IsSuspended {

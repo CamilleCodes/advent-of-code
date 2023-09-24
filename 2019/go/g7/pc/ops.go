@@ -58,7 +58,7 @@ func (c *Computer) input(ptr int) int {
 	return ptr
 }
 
-// Outputs the value of it's only parameter and suspends the computer (for part 2)
+// Outputs the value of it's only parameter (and suspends the computer for part 2)
 func (c *Computer) output(modes []int, ptr int) int {
 	var output int
 	if modes[len(modes)-1] == 1 {
