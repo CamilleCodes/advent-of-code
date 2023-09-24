@@ -25,15 +25,15 @@ func runAmplifiers() int {
 	phaseSettings := []int{0, 1, 2, 3, 4}
 	finalOutputSignal := 0
 
+	amplifierA := &pc.Computer{}
+	amplifierB := &pc.Computer{}
+	amplifierC := &pc.Computer{}
+	amplifierD := &pc.Computer{}
+	amplifierE := &pc.Computer{}
+
 	// Permutations reference:
 	// https://www.baeldung.com/cs/array-generate-all-permutations#quickperm-algorithm
 	for permutation := range quickPerm.GeneratePermutationsInt(phaseSettings) {
-		amplifierA := &pc.Computer{}
-		amplifierB := &pc.Computer{}
-		amplifierC := &pc.Computer{}
-		amplifierD := &pc.Computer{}
-		amplifierE := &pc.Computer{}
-
 		phaseSetting := permutation[0]
 		inputInstruction := 0
 		amplifierA.InitializeMemory(amplifierController, phaseSetting, inputInstruction)
@@ -64,5 +64,53 @@ func runAmplifiers() int {
 }
 
 func loopAmplifiers() int {
-	return 0
+	file := utils.GetFile("g7/input.txt")
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	amplifierController := utils.GetProgram(scanner)
+
+	phaseSettings := []int{9, 8, 7, 6, 5}
+	finalOutputSignal := 0
+
+	amplifierA := &pc.Computer{}
+	amplifierB := &pc.Computer{}
+	amplifierC := &pc.Computer{}
+	amplifierD := &pc.Computer{}
+	amplifierE := &pc.Computer{}
+
+	for permutation := range quickPerm.GeneratePermutationsInt(phaseSettings) {
+		amplifierA.LoadSoftware(amplifierController, permutation[0])
+		amplifierB.LoadSoftware(amplifierController, permutation[1])
+		amplifierC.LoadSoftware(amplifierController, permutation[2])
+		amplifierD.LoadSoftware(amplifierController, permutation[3])
+		amplifierE.LoadSoftware(amplifierController, permutation[4])
+
+		amplifierA.SetInputSignal(0)
+
+		for amplifierE.IsRunning {
+			amplifierA.ProcessUntilSuspended()
+
+			amplifierB.SetInputSignal(amplifierA.OutputSignal)
+			amplifierB.ProcessUntilSuspended()
+
+			amplifierC.SetInputSignal(amplifierB.OutputSignal)
+			amplifierC.ProcessUntilSuspended()
+
+			amplifierD.SetInputSignal(amplifierC.OutputSignal)
+			amplifierD.ProcessUntilSuspended()
+
+			amplifierE.SetInputSignal(amplifierD.OutputSignal)
+			amplifierE.ProcessUntilSuspended()
+
+			amplifierA.SetInputSignal(amplifierE.OutputSignal)
+		}
+
+		if amplifierE.OutputSignal > finalOutputSignal {
+			finalOutputSignal = amplifierE.OutputSignal
+		}
+
+	}
+
+	return finalOutputSignal
 }

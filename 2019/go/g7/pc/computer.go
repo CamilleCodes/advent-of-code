@@ -7,11 +7,27 @@ import (
 )
 
 type Computer struct {
-	memory       []int
-	phaseSetting int
-	inputSignal  int
+	IsRunning    bool
+	IsSuspended  bool
 	OutputSignal int
-	inputCounter int
+
+	memory         []int
+	instructionPtr int
+	phaseSetting   int
+	inputSignal    int
+	inputCounter   int
+}
+
+func (c *Computer) LoadSoftware(software []int, phaseSetting int) {
+	c.IsRunning = true
+	c.memory = utils.Copy(software)
+	c.phaseSetting = phaseSetting
+	c.inputCounter = 0
+	c.instructionPtr = 0
+}
+
+func (c *Computer) SetInputSignal(inputSignal int) {
+	c.inputSignal = inputSignal
 }
 
 // InitializeMemory sets the values for the computer program memory
@@ -20,12 +36,21 @@ func (c *Computer) InitializeMemory(software []int, phaseSetting, inputSignal in
 	c.phaseSetting = phaseSetting
 	c.inputSignal = inputSignal
 	c.inputCounter = 0
+	c.instructionPtr = 0
 }
 
 // ProcessInstructions runs the computer program
 func (c *Computer) ProcessInstructions() {
-	for instructionPtr := 0; instructionPtr < len(c.memory); {
-		instructionPtr = c.processOpCode(instructionPtr)
+	c.IsRunning = true
+	for c.IsRunning && c.instructionPtr < len(c.memory) {
+		c.instructionPtr = c.processOpCode(c.instructionPtr)
+	}
+}
+
+func (c *Computer) ProcessUntilSuspended() {
+	c.IsSuspended = false
+	for c.IsRunning && !c.IsSuspended {
+		c.instructionPtr = c.processOpCode(c.instructionPtr)
 	}
 }
 
@@ -53,6 +78,7 @@ func (c *Computer) processOpCode(ptr int) int {
 		return c.equals(modes, ptr)
 	case 99:
 		// halt
+		c.IsRunning = false
 		return len(c.memory)
 	default:
 		fmt.Println("invalid opcode:", opCode)
