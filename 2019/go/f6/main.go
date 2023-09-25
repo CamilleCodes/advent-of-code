@@ -24,6 +24,7 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		orbit := getLocalOrbit(scanner.Text())
+		// orbit[1] orbits orbit[0]
 		orbitsMap[orbit[1]] = orbit[0]
 	}
 
@@ -38,25 +39,11 @@ func getLocalOrbit(input string) []string {
 // getOrbitalTransfers returns the minumim number of transfers required to
 // move from the object YOU are orbiting to the object SAN is orbiting
 func getOrbitalTransfers(orbitsMap map[string]string) int {
-	youPathSlice, youPathMap := getPath(orbitsMap, "YOU")
-	sanPathSlice, sanPathMap := getPath(orbitsMap, "SAN")
-
-	youPathLength := len(youPathSlice)
-	sanPathLength := len(sanPathSlice)
-
-	fmt.Println("youPathLength:", youPathLength)
-	fmt.Println("sanPathLength:", sanPathLength)
-
-	fmt.Println("youPathSlice:", youPathSlice)
-	fmt.Println("sanPathSlice:", sanPathSlice)
-
-	fmt.Println("youPathMap:", youPathMap)
-	fmt.Println("sanPathMap:", sanPathMap)
+	youPathSlice := getPath(orbitsMap, "YOU")
+	sanPathSlice := getPath(orbitsMap, "SAN")
 
 	for uIndex, uObj := range youPathSlice {
-		fmt.Println("uIndex:", uIndex, "uObj:", uObj)
 		for sIndex, sObj := range sanPathSlice {
-			fmt.Println("sIndex:", sIndex, "sObj:", sObj)
 			if uObj == sObj {
 				return uIndex + sIndex
 			}
@@ -68,12 +55,13 @@ func getOrbitalTransfers(orbitsMap map[string]string) int {
 
 // getPath (part 2)
 //
-// Returns a slice of the objects in the path from start to COM and a map of the
-// objects in the path to the number of transfers away from the start object
-func getPath(orbitsMap map[string]string, start string) ([]string, map[string]int) {
+// Returns a slice of the objects in the path from start to COM
+func getPath(orbitsMap map[string]string, start string) []string {
 	pathSlice := make([]string, 0)
-	pathMap := make(map[string]int)
 	count := 0
+
+	// pathMap is not currently being used outside of this function
+	pathMap := make(map[string]int)
 
 	for {
 		if start == "COM" {
@@ -87,7 +75,7 @@ func getPath(orbitsMap map[string]string, start string) ([]string, map[string]in
 		pathMap[start] = count
 	}
 
-	return pathSlice, pathMap
+	return pathSlice
 }
 
 // getOrbitCounts returns the total number of direct and indirect orbits in the map (for part 1)
