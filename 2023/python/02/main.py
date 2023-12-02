@@ -18,16 +18,14 @@ def check_hands(hands, cubes):
 
 
 def part_one():
-    path = "02/test.txt"
+    path = "02/input.txt"
     cubes = {"red": 12, "green": 13, "blue": 14}
     total = 0
 
     with open(path) as file:
         while game := file.readline():
-            # Get rid of any new line chars
-            game = game.splitlines()[0]
-
-            game_details = game.split(": ")
+            # Note: get rid of any new line chars
+            game_details = game.strip().split(": ")
             hands = game_details[1].split("; ")
 
             if check_hands(hands, cubes):
@@ -43,10 +41,8 @@ def part_two():
 
     with open(path) as file:
         while game := file.readline():
-            # Get rid of any new line chars
-            game = game.splitlines()[0]
-
-            game_details = game.split(": ")
+            # Note: get rid of any new line chars
+            game_details = game.strip().split(": ")
             hands = game_details[1].split("; ")
 
             # Determine the fewest cubes needed for the game
