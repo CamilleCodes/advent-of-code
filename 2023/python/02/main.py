@@ -2,7 +2,7 @@
 # 12 red cubes, 13 green cubes, and 14 blue cubes. What is the sum of the IDs of those games?
 
 
-def check_hands(hands, cubes):
+def check_hands(hands: list[str], cubes: dict[str, int]) -> bool:
     for hand in hands:
         selected_cubes = hand.split(", ")
 
