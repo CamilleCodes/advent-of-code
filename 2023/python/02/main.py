@@ -95,8 +95,8 @@ def calculate_game_power(game_cubes: dict[str, int]) -> int:
     returned from determine_game_cubes()"""
 
     power_value = 1
-    for cube in game_cubes:
-        power_value *= game_cubes[cube]
+    for cube_subset in game_cubes.values():
+        power_value *= cube_subset
 
     return power_value
 
