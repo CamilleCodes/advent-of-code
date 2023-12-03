@@ -1,3 +1,10 @@
+from collections import namedtuple
+
+# TODO: Use namedtuple
+# https://docs.python.org/3/library/collections.html?highlight=namedtuple#collections.namedtuple
+Cubes = namedtuple("Cubes", "count color")
+
+
 def get_game_record(game: str) -> tuple[int, list[str]]:
     """Splits the game record information to retrieve the game ID number
     and the subsets of cubes that were revealed from the bag.
@@ -109,7 +116,8 @@ def part_two() -> None:
     values = []
 
     with open(path) as file:
-        while game := file.readline():
+        for game in file:
+            # while game := file.readline():
             _, subsets_of_cubes = get_game_record(game)
             game_cubes = determine_game_cubes(subsets_of_cubes)
             power_value = calculate_game_power(game_cubes)
